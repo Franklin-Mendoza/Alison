@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ALISON</title>
   <style>
-    /* Todos los estilos anteriores se mantienen igual */
     body {
       font-family: 'Arial', sans-serif;
       background: linear-gradient(135deg, #4CAF50, #2196F3);
@@ -56,6 +55,7 @@
     .yes {
       background-color: #4caf50;
       color: white;
+      position: relative;
     }
 
     .yes:hover {
@@ -78,23 +78,46 @@
       color: #333;
       font-size: 1.2em;
     }
+
+    .confeti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: yellow;
+      opacity: 0.8;
+      border-radius: 50%;
+      animation: caer 1.5s linear forwards;
+    }
+
+    @keyframes caer {
+      0% { transform: translateY(0) rotate(0); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-	<h1>RESPONDE CON LA VERDAD POR FAVOR</h1>
-	<div class="titulo-principal">ALISON</div>
+    <h1>RESPONDE CON LA VERDAD POR FAVOR</h1>
+    <div class="titulo-principal">ALISON</div>
     <h1>¿ES FEA?.</h1>
     <button onclick="mostrarMensaje()" class="btn yes">Sí</button>
-    <div id="mensaje-motivacion">Lo sabiamos 😂 La Ali si es FEA</div>
+    <div id="mensaje-motivacion">Lo sabíamos 😂 La Ali sí es FEA</div>
     <button id="noBtn" class="btn no" style="left: 0; top: 0;" onclick="moverBoton()">No</button>
   </div>
 
   <script>
-    let escalaSi = 1; // Variable para controlar el tamaño del botón Sí
+    let escalaSi = 1; // Tamaño inicial del botón Sí
 
     function mostrarMensaje() {
       document.getElementById('mensaje-motivacion').style.display = 'block';
+
+      // Reiniciar tamaño del botón Sí
+      const yesBtn = document.querySelector('.yes');
+      yesBtn.style.transform = 'scale(1)';
+      escalaSi = 1;
+
+      // Llamar a la función para generar confeti
+      lanzarConfeti();
     }
 
     function moverBoton() {
@@ -108,10 +131,22 @@
       boton.style.left = `${nuevaX}px`;
       boton.style.top = `${nuevaY}px`;
 
-      // Aumenta el tamaño del botón Sí
+      // Aumenta el tamaño del botón Sí pero solo hacia abajo
       const yesBtn = document.querySelector('.yes');
       escalaSi += 0.2;
-      yesBtn.style.transform = `scale(${escalaSi})`;
+      yesBtn.style.transform = `scale(1, ${escalaSi})`;
+    }
+
+    function lanzarConfeti() {
+      for (let i = 0; i < 50; i++) {
+        const confeti = document.createElement('div');
+        confeti.classList.add('confeti');
+        confeti.style.left = `${Math.random() * 100}vw`;
+        confeti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`; // Colores aleatorios
+        document.body.appendChild(confeti);
+
+        setTimeout(() => confeti.remove(), 1500); // Eliminar después de la animación
+      }
     }
   </script>
 </body>
