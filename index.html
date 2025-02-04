@@ -58,7 +58,7 @@
       background-color: #4caf50;
       color: white;
       transform-origin: top;
-      z-index: 1; /* Para que no cubra el texto */
+      z-index: 1;
     }
 
     .yes:hover {
@@ -89,16 +89,16 @@
       background-color: red;
       border-radius: 50%;
       opacity: 0;
-      animation: confetti-fall 1s linear infinite;
+      animation: confetti-fall 2s linear infinite;
     }
 
     @keyframes confetti-fall {
       0% {
-        transform: translateY(0) rotate(0);
+        transform: translateY(0) translateX(0) rotate(0);
         opacity: 1;
       }
       100% {
-        transform: translateY(100vh) rotate(360deg);
+        transform: translateY(100vh) translateX(calc(-50px + 100px * random())) rotate(360deg);
         opacity: 0;
       }
     }
@@ -111,58 +111,66 @@
     <h1>¿ES FEA?.</h1>
     <button onclick="mostrarMensaje()" id="yesBtn" class="btn yes">Sí</button>
     <div id="mensaje-motivacion">Lo sabíamos 😂 La Ali sí es FEA</div>
-    <button id="noBtn" class="btn no" style="left: 0; top: 0;" onclick="moverBoton()">No</button>
+    <button id="noBtn" class="btn no" onclick="moverBoton()">No</button>
   </div>
 
   <script>
-    let escalaSi = 1; // Variable para controlar el tamaño del botón Sí
+    let escalaSi = 1;
 
     function mostrarMensaje() {
       document.getElementById('mensaje-motivacion').style.display = 'block';
-
-      // Reiniciar tamaño del botón Sí
       const yesBtn = document.getElementById('yesBtn');
       escalaSi = 1;
       yesBtn.style.transform = `scale(${escalaSi})`;
 
-      // Generar confites llamativos
-      for (let i = 0; i < 50; i++) {
-        crearConfeti();
+      for (let i = 0; i < 100; i++) { // 10 veces más confites
+        setTimeout(() => crearConfeti(), i * 10);
       }
     }
 
     function moverBoton() {
-      // Mueve el botón No
-      const boton = document.getElementById('noBtn');
+      const botonNo = document.getElementById('noBtn');
+      const botonSi = document.getElementById('yesBtn');
       const container = document.querySelector('.container');
-      const anchoMax = container.offsetWidth - boton.offsetWidth;
-      const altoMax = container.offsetHeight - boton.offsetHeight;
-      const nuevaX = Math.random() * anchoMax;
-      const nuevaY = Math.random() * altoMax;
-      boton.style.left = `${nuevaX}px`;
-      boton.style.top = `${nuevaY}px`;
+      let nuevaX, nuevaY, distancia;
 
-      // Aumenta el tamaño del botón Sí y lo desplaza hacia abajo
+      do {
+        const anchoMax = container.offsetWidth - botonNo.offsetWidth;
+        const altoMax = container.offsetHeight - botonNo.offsetHeight;
+        nuevaX = Math.random() * anchoMax;
+        nuevaY = Math.random() * altoMax;
+
+        const centroNoX = nuevaX + botonNo.offsetWidth / 2;
+        const centroNoY = nuevaY + botonNo.offsetHeight / 2;
+        const centroSiX = botonSi.offsetLeft + botonSi.offsetWidth / 2;
+        const centroSiY = botonSi.offsetTop + botonSi.offsetHeight / 2;
+
+        distancia = Math.sqrt(Math.pow(centroSiX - centroNoX, 2) + Math.pow(centroSiY - centroNoY, 2));
+      } while (distancia < 100); // Asegurar distancia mínima
+
+      botonNo.style.left = `${nuevaX}px`;
+      botonNo.style.top = `${nuevaY}px`;
+
       const yesBtn = document.getElementById('yesBtn');
       escalaSi += 0.2;
-      yesBtn.style.transform = `scale(${escalaSi}, ${escalaSi * 1.5})`; // Crece más hacia abajo
+      yesBtn.style.transform = `scale(${escalaSi}, ${escalaSi * 1.5})`;
     }
 
     function crearConfeti() {
       const confeti = document.createElement("div");
       confeti.classList.add("confetti");
 
-      // Colores aleatorios llamativos
       const colores = ["#ff0", "#f00", "#0f0", "#00f", "#ff00ff", "#00ffff"];
       confeti.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
 
-      // Posición inicial aleatoria
       confeti.style.left = `${Math.random() * window.innerWidth}px`;
-      confeti.style.top = `-${Math.random() * 20}px`; // Aparecen arriba
+      confeti.style.top = `-${Math.random() * 20}px`;
+
+      confeti.style.animation = `confetti-fall 2s linear infinite`;
+      confeti.style.setProperty('--random', Math.random());
 
       document.body.appendChild(confeti);
 
-      // Eliminar confites después de la animación
       setTimeout(() => {
         confeti.remove();
       }, 2000);
