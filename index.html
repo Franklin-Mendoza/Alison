@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ALISON</title>
   <style>
+    /* Todos los estilos anteriores se mantienen igual */
     body {
       font-family: 'Arial', sans-serif;
       background: linear-gradient(135deg, #4CAF50, #2196F3);
@@ -86,15 +87,18 @@
     <h1>¿ES FEA?.</h1>
     <button onclick="mostrarMensaje()" class="btn yes">Sí</button>
     <div id="mensaje-motivacion">Lo sabiamos 😂 La Ali si es FEA</div>
-    <button id="noBtn" class="btn no" style="left: 0; top: 0;" onmouseover="moverBoton()">No</button>
+    <button id="noBtn" class="btn no" style="left: 0; top: 0;" onclick="moverBoton()">No</button>
   </div>
 
   <script>
+    let escalaSi = 1; // Variable para controlar el tamaño del botón Sí
+
     function mostrarMensaje() {
       document.getElementById('mensaje-motivacion').style.display = 'block';
     }
 
     function moverBoton() {
+      // Mueve el botón No
       const boton = document.getElementById('noBtn');
       const container = document.querySelector('.container');
       const anchoMax = container.offsetWidth - boton.offsetWidth;
@@ -103,6 +107,11 @@
       const nuevaY = Math.random() * altoMax;
       boton.style.left = `${nuevaX}px`;
       boton.style.top = `${nuevaY}px`;
+
+      // Aumenta el tamaño del botón Sí
+      const yesBtn = document.querySelector('.yes');
+      escalaSi += 0.2;
+      yesBtn.style.transform = `scale(${escalaSi})`;
     }
   </script>
 </body>
